@@ -179,6 +179,7 @@ class LCD():
         self.bl.ChangeDutyCycle(value)
 
     def img_show(self, img):
+        img = img.rotate(180)
         img = img.resize((self.h, self.w), Image.LANCZOS)
         img_w, img_h = img.size
         
@@ -221,5 +222,4 @@ class LCD():
     def close(self):
         self.spi.close()
     
-        GPIO.cleanup()
-        
+        GPIO.cleanup([CS_PIN, RST_PIN, DC_PIN, BL_PIN])
