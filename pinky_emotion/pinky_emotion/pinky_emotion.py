@@ -57,7 +57,7 @@ class PinkyEmotion(Node):
     def play_gif(self, path):
         img = Image.open(path)
         for frame in ImageSequence.Iterator(img):
-            self.lcd.img_show(frame.rotate(180))
+            self.lcd.img_show(frame)
 
         
 def main(args=None):
