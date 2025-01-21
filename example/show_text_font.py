@@ -5,7 +5,7 @@ import os, time
 lcd = LCD()
 
 # lcd 밝기 설정
-lcd.set_backlight(90)
+lcd.set_backlight(50)
 
 img_width, img_height = 320, 240
 background_color = (255, 255, 255)
