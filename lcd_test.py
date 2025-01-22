@@ -9,7 +9,6 @@ background_color = (0, 255, 0)
 text_color = (0, 255, 0)
 
 img = Image.new('RGB', (img_width, img_height), color=background_color)
-img.show()
 
 lcd.img_show(img)
 
