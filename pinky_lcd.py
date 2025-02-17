@@ -211,7 +211,7 @@ class LCD():
         GPIO.output(CS_PIN, GPIO.HIGH)
 
     def fill_black(self):
-        self._set_windows(0, 0, self.h, self.w)
+        self._set_windows(0, 0, self.w, self.h)
         buf = [0x00, 0x00] * (self.w * self.h)
         GPIO.output(DC_PIN, GPIO.HIGH)
         GPIO.output(CS_PIN, GPIO.LOW)
