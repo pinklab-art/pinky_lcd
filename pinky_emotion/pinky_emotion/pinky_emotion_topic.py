@@ -94,11 +94,9 @@ def main(args=None):
     try:
         rclpy.spin(pinky_lcd_node)
     except KeyboardInterrupt:
-        pass
+        pinky_lcd_node.lcd.close()
     finally:
-        pinky_lcd_node.lcd.fill_black()
         pinky_lcd_node.destroy_node()
-        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
