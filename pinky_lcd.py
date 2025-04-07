@@ -205,6 +205,14 @@ class LCD():
         GPIO.output(CS_PIN, GPIO.HIGH)
 
     def clear(self):
+        self._set_windows(0, 0, self.w, self.h)
+        buf = [0x00, 0x00] * (self.w * self.h)
+        GPIO.output(DC_PIN, GPIO.HIGH)
+        GPIO.output(CS_PIN, GPIO.LOW)
+        for i in range(0, len(buf), 4096):
+            self.spi.writebytes(buf[i:i+4096])
+        GPIO.output(CS_PIN, GPIO.HIGH)
+
         self._set_windows(0, 0, self.h, self.w)
         buf = [0x00, 0x00] * (self.w * self.h)
         GPIO.output(DC_PIN, GPIO.HIGH)
