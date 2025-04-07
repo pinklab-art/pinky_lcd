@@ -50,7 +50,7 @@ class PinkyEmotion(Node):
             response.response = "wrong command"
             self.get_logger().info("wrong command")
 
-        self.lcd.fill_black()
+        self.lcd.clear()
 
         return response
 
