@@ -14,34 +14,37 @@ BL_PIN   = 12
 
 class LCD():
     def __init__(self):
-        # GPIO 초기화
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)
-        
-        GPIO.setup(CS_PIN, GPIO.OUT)    # CS 핀 출력 모드
-        GPIO.setup(DC_PIN, GPIO.OUT)    # DC 핀 출력 모드
-        GPIO.setup(RST_PIN, GPIO.OUT)   # RST 핀 출력 모드
-        GPIO.setup(BL_PIN, GPIO.OUT)    # 백라이트 핀 출력 모드
-        
-        # 백라이트 초기값 설정
-        self.bl = GPIO.PWM(BL_PIN, 1000)  # PWM 설정
-        self.bl.start(90)  # 90% 백라이트 밝기
+        try:
+            # GPIO 초기화
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setwarnings(False)
+            
+            GPIO.setup(CS_PIN, GPIO.OUT)    # CS 핀 출력 모드
+            GPIO.setup(DC_PIN, GPIO.OUT)    # DC 핀 출력 모드
+            GPIO.setup(RST_PIN, GPIO.OUT)   # RST 핀 출력 모드
+            GPIO.setup(BL_PIN, GPIO.OUT)    # 백라이트 핀 출력 모드
+            
+            # 백라이트 초기값 설정
+            self.bl = GPIO.PWM(BL_PIN, 1000)  # PWM 설정
+            self.bl.start(90)  # 90% 백라이트 밝기
 
-        # SPI 초기화
-        self.bus = 0
-        self.dev = 0
-        self.spi_speed = 32000000
-        self.spi = spidev.SpiDev()
-        self.spi.open(self.bus, self.dev)
-        self.spi.max_speed_hz = self.spi_speed
-        self.spi.mode = 0b00
+            # SPI 초기화
+            self.bus = 0
+            self.dev = 0
+            self.spi_speed = 32000000
+            self.spi = spidev.SpiDev()
+            self.spi.open(self.bus, self.dev)
+            self.spi.max_speed_hz = self.spi_speed
+            self.spi.mode = 0b00
 
-        # LCD 너비와 높이 설정
-        self.w = 240
-        self.h = 320
+            # LCD 너비와 높이 설정
+            self.w = 240
+            self.h = 320
+        except:
+            print("현재 LCD가 사용중입니다. 사용 중인 커널을 종료 후 다시 실행해 주세요")
         
         self.lcd_init()
-        self.fill_black()
+        self.clear()
         
     def _write_cmd(self, cmd):
         """write command"""
@@ -203,15 +206,14 @@ class LCD():
 
     def clear(self):
         self._set_windows(0, 0, self.w, self.h)
+        buf = [0x00, 0x00] * (self.w * self.h)
         GPIO.output(DC_PIN, GPIO.HIGH)
         GPIO.output(CS_PIN, GPIO.LOW)
-        buf = [0xFF]*(self.w*self.h*2)
         for i in range(0, len(buf), 4096):
             self.spi.writebytes(buf[i:i+4096])
         GPIO.output(CS_PIN, GPIO.HIGH)
 
-    def fill_black(self):
-        self._set_windows(0, 0, self.w, self.h)
+        self._set_windows(0, 0, self.h, self.w)
         buf = [0x00, 0x00] * (self.w * self.h)
         GPIO.output(DC_PIN, GPIO.HIGH)
         GPIO.output(CS_PIN, GPIO.LOW)
